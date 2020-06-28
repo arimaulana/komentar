@@ -29,7 +29,7 @@ export class CommentController extends BaseController {
 	@Get()
 	public async findAllCommentsByURL(@Query("url") url: string) {
 		if (!url) {
-			throw new HttpException("url required.", HttpStatus.BAD_REQUEST);
+			return this.badRequest("Url required.");
 		}
 
 		const comments = await this.commentService.findCommentsByURL(url);
@@ -46,7 +46,9 @@ export class CommentController extends BaseController {
 	@Get(":id")
 	public async findCommentByID(@Param("id") id: string) {
 		const comment = await this.commentService.findCommentByID(id);
-		if (!comment) throw new HttpException("Invalid comment id.", HttpStatus.BAD_REQUEST);
+
+		if (!comment) return this.badRequest("Invalid comment id.");
+
 		return this.ok(comment);
 	}
 
@@ -55,11 +57,11 @@ export class CommentController extends BaseController {
 		const { author, content, url } = createCommentDTO;
 
 		if (!author) {
-			throw new HttpException("Author required.", HttpStatus.BAD_REQUEST);
+			return this.badRequest("Author required.");
 		} else if (!content) {
-			throw new HttpException("Content required.", HttpStatus.BAD_REQUEST);
+			return this.badRequest("Content required.");
 		} else if (!url) {
-			throw new HttpException("Url required.", HttpStatus.BAD_REQUEST);
+			return this.badRequest("Url required.");
 		}
 
 		const createdCommentId = await this.commentService.createComment(author, content, url);
@@ -71,7 +73,7 @@ export class CommentController extends BaseController {
 		const { content } = modifyCommentDTO;
 
 		if (!content) {
-			throw new HttpException("Content required.", HttpStatus.BAD_REQUEST);
+			return this.badRequest("Content required.");
 		}
 
 		await this.commentService.modifyComment(id, content);

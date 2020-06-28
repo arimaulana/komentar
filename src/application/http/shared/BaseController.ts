@@ -1,4 +1,4 @@
-import { HttpStatus } from "@nestjs/common";
+import { HttpStatus, HttpException } from "@nestjs/common";
 
 export abstract class BaseController {
 	public jsonResponse(code: number, data?: object | string) {
@@ -17,5 +17,9 @@ export abstract class BaseController {
 
 	public created(data) {
 		return this.jsonResponse(HttpStatus.CREATED, data);
+	}
+
+	public badRequest(message: string) {
+		throw new HttpException(message || "Bad Request", HttpStatus.BAD_REQUEST);
 	}
 }

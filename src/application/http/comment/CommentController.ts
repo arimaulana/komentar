@@ -12,16 +12,19 @@ import {
 	Delete,
 } from "@nestjs/common";
 
-import { Comment } from "../../../domain/Comment";
 import { CommentService } from "../../../domain/service/CommentService";
 import { CreateCommentDTO, ModifyCommentDTO } from "./CommentDTO";
+import { BaseController } from "../shared/BaseController";
 
 @Controller("comments")
-export class CommentController {
-	constructor(
-		@Inject("COMMENT_SERVICE")
-		private readonly commentService: CommentService
-	) {}
+export class CommentController extends BaseController {
+	private readonly commentService: CommentService;
+
+	constructor(@Inject("COMMENT_SERVICE") commentService: CommentService) {
+		super();
+
+		this.commentService = commentService;
+	}
 
 	@Get()
 	public async findAllCommentsByURL(@Query("url") url: string) {
@@ -29,24 +32,26 @@ export class CommentController {
 			throw new HttpException("url required.", HttpStatus.BAD_REQUEST);
 		}
 
-		return await this.commentService.findCommentsByURL(url);
+		const comments = await this.commentService.findCommentsByURL(url);
+		return this.ok(comments);
 	}
 
 	//admin only
 	@Get("all")
-	public async findAllComments(@Query() query): Promise<Comment[]> {
-		return await this.commentService.findAllComments();
+	public async findAllComments() {
+		const comments = await this.commentService.findAllComments();
+		return this.ok(comments);
 	}
 
 	@Get(":id")
-	public async findCommentByID(@Param("id") id: string): Promise<Comment> {
+	public async findCommentByID(@Param("id") id: string) {
 		const comment = await this.commentService.findCommentByID(id);
 		if (!comment) throw new HttpException("Invalid comment id.", HttpStatus.BAD_REQUEST);
-		return comment;
+		return this.ok(comment);
 	}
 
 	@Post()
-	public async createComment(@Body() createCommentDTO: CreateCommentDTO): Promise<string> {
+	public async createComment(@Body() createCommentDTO: CreateCommentDTO) {
 		const { author, content, url } = createCommentDTO;
 
 		if (!author) {
@@ -57,32 +62,37 @@ export class CommentController {
 			throw new HttpException("Url required.", HttpStatus.BAD_REQUEST);
 		}
 
-		return await this.commentService.createComment(author, content, url);
+		const createdCommentId = await this.commentService.createComment(author, content, url);
+		return this.created(createdCommentId);
 	}
 
 	@Put(":id")
-	public async modifyComment(@Param("id") id: string, @Body() modifyCommentDTO: ModifyCommentDTO): Promise<void> {
+	public async modifyComment(@Param("id") id: string, @Body() modifyCommentDTO: ModifyCommentDTO) {
 		const { content } = modifyCommentDTO;
 
 		if (!content) {
 			throw new HttpException("Content required.", HttpStatus.BAD_REQUEST);
 		}
 
-		return await this.commentService.modifyComment(id, content);
+		await this.commentService.modifyComment(id, content);
+		return this.ok();
 	}
 
 	@Put(":id/show")
-	public async showComment(@Param("id") id: string): Promise<void> {
-		return await this.commentService.showComment(id);
+	public async showComment(@Param("id") id: string) {
+		await this.commentService.showComment(id);
+		return this.ok();
 	}
 
 	@Put(":id/hide")
-	public async hideComment(@Param("id") id: string): Promise<void> {
-		return await this.commentService.hideComment(id);
+	public async hideComment(@Param("id") id: string) {
+		await this.commentService.hideComment(id);
+		return this.ok();
 	}
 
 	@Delete(":id")
-	public async removeComment(@Param("id") id: string): Promise<void> {
-		return await this.commentService.removeComment(id);
+	public async removeComment(@Param("id") id: string) {
+		await this.commentService.removeComment(id);
+		return this.ok();
 	}
 }

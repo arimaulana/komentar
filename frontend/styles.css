@@ -1,0 +1,68 @@
+textarea {
+	margin: 0;
+	padding: 0;
+	outline: 0;
+	border: 0;
+}
+
+.komentar-wrapper {
+	max-width: 750px;
+	margin: 0 auto;
+	padding: 8px;
+
+	border: solid black;
+}
+
+.komentar-info {
+	height: 32px;
+	/* background-color: #444444; */
+}
+
+.komentar-editor {
+	height: 120px;
+	background-color: #666666;
+	/*     
+    display: flex;
+    flex-direction: column; */
+}
+
+.komentar-editor__komentar-new {
+	margin: 4px;
+	padding: 8px;
+}
+
+.komentar-editor__komentar-new > * {
+    display: block;
+}
+
+.komentar-editor__komentar-new__komentar-new-text {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+
+    width: 100%;
+    
+    margin-bottom: 8px;
+}
+
+.komentar-editor__komentar-new > section {
+    display: flex;
+    justify-content: space-between;
+}
+
+.komentar-editor__komentar-new__komentar-new-name {
+}
+
+.komentar-editor__komentar-new__komentar-new-submit {
+}
+
+.komentar-box {
+    background-color: #888888;
+    min-height: 100px;
+}
+
+.komentar-list {
+    
+}
+

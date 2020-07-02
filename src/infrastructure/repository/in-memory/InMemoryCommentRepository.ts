@@ -9,17 +9,6 @@ export class InMemoryCommentRepository implements CommentRepository {
 
 	public constructor() {
 		this.comments = [];
-
-		this.comments.push(
-			Comment.createComment
-				.setId("123123123123")
-				.setAuthor("arimaulana")
-				.setContent("test comment euy")
-				.setUrl("https://arimaulana.com/first-post")
-				.setStatus("SHOWED")
-				.setParentId("0")
-				.build()
-		);
 	}
 
 	public async findAll(): Promise<Comment[]> {

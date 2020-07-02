@@ -3,6 +3,7 @@ export class Comment {
 	private author: string;
 	private content: string;
 	private url: string; // url where the comment live
+	private date: Date;
 	private status: string;
 	private parentId: string;
 
@@ -11,6 +12,7 @@ export class Comment {
 		author: string,
 		content: string,
 		url: string,
+		date: Date,
 		status: string,
 		parentId: string
 	) {
@@ -18,6 +20,7 @@ export class Comment {
 		this.author = author;
 		this.content = content;
 		this.url = url;
+		this.date = date;
 		this.status = status;
 		this.parentId = parentId;
 	}
@@ -27,7 +30,8 @@ export class Comment {
 		private commentAuthor: string;
 		private commentContent: string;
 		private commentUrl: string;
-		private commentStatus: string;
+		private commentDate: Date = new Date();
+		private commentStatus: string = "SHOWED";
 		private commentParentId: string;
 
 		public setId(id: string): CommentBuilder {
@@ -50,13 +54,18 @@ export class Comment {
 			return this;
 		}
 
+		public setDate(date: Date): CommentBuilder {
+			this.commentDate = date;
+			return this;
+		}
+
 		public setStatus(status: string): CommentBuilder {
 			this.commentStatus = status;
 			return this;
 		}
 
 		public setParentId(parentId: string): CommentBuilder {
-            if (!parentId) return this;
+			if (!parentId) return this;
 
 			this.commentParentId = parentId;
 			return this;
@@ -68,24 +77,12 @@ export class Comment {
 				this.commentAuthor,
 				this.commentContent,
 				this.commentUrl,
+				this.commentDate,
 				this.commentStatus,
 				this.commentParentId
 			);
 		}
 	})();
-
-	public createComment(author: string, content: string, url: string): void {
-		// validate url
-
-		// validate content
-		this.validateContent();
-
-		// create comment
-		this.author = author;
-		this.content = content;
-		this.url = url;
-		this.status = "SHOWED";
-	}
 
 	public modifyComment(content: string): void {
 		// validate content
@@ -120,6 +117,10 @@ export class Comment {
 
 	public getUrl(): string {
 		return this.url;
+	}
+
+	public getDate(): Date {
+		return this.date;
 	}
 
 	public getStatus(): string {

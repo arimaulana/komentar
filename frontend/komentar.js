@@ -1,3 +1,5 @@
+const KOMENTAR_TAG = "komentar-app";
+
 const template = document.createElement("template");
 template.innerHTML = `
 <style>
@@ -55,9 +57,11 @@ template.innerHTML = `
 	}
 
 	.komentar-editor__komentar-new__komentar-new-name {
+		/* not implemented yet */
 	}
 
 	.komentar-editor__komentar-new__komentar-new-submit {
+		/* not implemented yet */
 	}
 
 	.komentar-box {
@@ -66,7 +70,7 @@ template.innerHTML = `
 	}
 
 	.komentar-list {
-		
+		/* not implemented yet */
 	}
 </style>
 <section class="komentar-wrapper">
@@ -78,25 +82,54 @@ template.innerHTML = `
 			<textarea id="komentar-new-text" class="komentar-editor__komentar-new__komentar-new-text" rows="3" cols="5" name="komentar-new-text" placeholder="Comment" required></textarea>
 			<section>
 				<input id="komentar-new-name" class="komentar-editor__komentar-new__komentar-new-name" type="text" name="komentar-new-name" placeholder="Name" required>
-				<button id="komentar-new-submit" class="komentar-editor__komentar-new__komentar-new-submit" type="submit">Submit</button>
+				<div id="komentar-new-submit" class="komentar-editor__komentar-new__komentar-new-submit">Submit</div>
 			</section>
 		</form>
 	</section>
 	<section class="komentar-box">
-		Be the first to comment
+		<section id="komentar-list" class="komentar-list"></section>
 	</section>
 </section>
 `;
+
+class Helper {
+	static status(response) {
+		if (response.status >= 200 && response.status < 300) {
+			return Promise.resolve(response);
+		} else {
+			return Promise.reject(new Error(response.statusText));
+		}
+	}
+
+	static json(response) {
+		return response.json();
+	}
+
+	static request(requestUrl, requestOptions) {
+		return new Promise((resolve, reject) => {
+			fetch(requestUrl, requestOptions)
+				.then(Helper.status)
+				.then(Helper.json)
+				.then((data) => {
+					resolve(data);
+				})
+				.catch((error) => {
+					reject(error);
+				});
+		});
+	}
+}
 
 class KomentarApp extends HTMLElement {
 	constructor() {
 		super();
 
 		// data
-		this.komentars = [];
-
-		// set comment api host
-		this.baseUrl = this.getAttribute("host") || "http://localhost:3000";
+		this.state = {
+			// set comment api host
+			baseUrl: this.getAttribute("host") || "http://localhost:3000",
+			komentars: [],
+		};
 
 		// attach shadow DOM to the parent element.
 		// save the shadowRoot in a property because
@@ -122,6 +155,9 @@ class KomentarApp extends HTMLElement {
 		this.fetchKomentar();
 
 		// install event listener
+		this.shadowRoot
+			.getElementById("komentar-new-submit")
+			.addEventListener("click", () => this.createCommentHandler(this));
 	}
 
 	adoptedCallback() {
@@ -132,27 +168,105 @@ class KomentarApp extends HTMLElement {
 		console.log("Komentar app removed from DOM");
 
 		// uninstall event listener
+		this.shadowRoot
+			.getElementById("komentar-new-submit")
+			.removeEventListener("click", () => this.createCommentHandler(this));
+	}
+
+	setState(newState) {
+		this.state = Object.assign({}, this.state, newState);
+
+		this.render();
+	}
+
+	render() {
+		this.renderKomentarList();
+	}
+
+	createCommentHandler(parent) {
+		// get author
+		const author = document.querySelector(KOMENTAR_TAG).shadowRoot.getElementById("komentar-new-name").value;
+		// const author = parent.shadowRoot.getElementById("komentar-new-name").value;
+		// const author = "Ari Maulana";
+		console.log(author);
+
+		// get content
+		const content = document.querySelector(KOMENTAR_TAG).shadowRoot.getElementById("komentar-new-text").value;
+		// const content = parent.shadowRoot.getElementById("komentar-new-text");
+		// const content = `Test Comment on ${new Date().toDateString()}`;
+		console.log(content);
+
+		// get url
+		const currentUrl = location.host + location.pathname;
+
+		// prep data
+		console.log(parent);
+		const requestUrl = `${parent.state.baseUrl}/comments`;
+		const requestOptions = {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				author: author,
+				content: content,
+				url: currentUrl,
+			}),
+		};
+
+		// submit data
+		Helper.request(requestUrl, requestOptions)
+			.then(() => {
+				console.log(`Comment submitted.`);
+			})
+			.catch((error) => {
+				console.log(`Comment failed to submit`, error);
+			});
+
+		// rerender
 	}
 
 	fetchKomentar() {
 		const currentUrl = location.host + location.pathname;
-		const targetUrl = `${this.baseUrl}/comments?url=${currentUrl}&host=${location.host}&slug=${location.pathname}`;
-		fetch(targetUrl, {
+		const requestUrl = `${this.state.baseUrl}/comments?url=${currentUrl}&host=${location.host}&slug=${location.pathname}`;
+		const requestOptions = {
+			method: "GET",
 			headers: {
 				Accept: "application/json",
 				"Content-Type": "application/json",
 			},
-			method: "GET",
-		})
-			.then((response) => {
-				console.log(response);
+		};
+
+		Helper.request(requestUrl, requestOptions)
+			.then((data) => {
+				// console.log("Request succeeded with JSON response", data);
+				this.setState({ komentars: data.payload });
 			})
 			.catch((error) => {
-				console.error(error);
+				console.log("Request failed", error);
 			});
 	}
 
-	renderKomentarList() {}
+	renderKomentarList() {
+		const isKomentarExist = this.state.komentars.length > 0;
+
+		const element = this.shadowRoot.getElementById("komentar-list");
+
+		if (!isKomentarExist) {
+			element.innerHTML = `Be the first to comment`;
+		} else {
+			const mappedInnerHTML = this.state.komentars.map((komentar) => {
+				const { id, author, content, date } = komentar;
+				return `
+					<section id="komentar-${id}">
+						<span><b>${author}</b> on ${new Date(date).toDateString()}</span>
+						<p>${content}</p>
+					</section>
+				`;
+			});
+			element.innerHTML = mappedInnerHTML.join("");
+		}
+	}
 }
 
-window.customElements.define("komentar-app", KomentarApp);
+window.customElements.define(KOMENTAR_TAG, KomentarApp);

@@ -22,8 +22,8 @@ textarea {
 	height: 120px;
 	background-color: #666666;
 	/*     
-    display: flex;
-    flex-direction: column; */
+	display: flex;
+	flex-direction: column; */
 }
 
 .komentar-editor__komentar-new {
@@ -32,7 +32,7 @@ textarea {
 }
 
 .komentar-editor__komentar-new > * {
-    display: block;
+	display: block;
 }
 
 .komentar-editor__komentar-new__komentar-new-text {
@@ -41,28 +41,44 @@ textarea {
 	-ms-box-sizing: border-box;
 	box-sizing: border-box;
 
-    width: 100%;
-    
-    margin-bottom: 8px;
+	width: 100%;
+
+	margin-bottom: 8px;
 }
 
 .komentar-editor__komentar-new > section {
-    display: flex;
-    justify-content: space-between;
+	display: flex;
+	justify-content: space-between;
 }
 
 .komentar-editor__komentar-new__komentar-new-name {
+	/* not implemented yet */
 }
 
 .komentar-editor__komentar-new__komentar-new-submit {
+	/* not implemented yet */
 }
 
 .komentar-box {
-    background-color: #888888;
-    min-height: 100px;
+	background-color: #888888;
+	min-height: 100px;
 }
 
 .komentar-list {
-    
+	padding: 8px;
+	/* not implemented yet */
 }
 
+.komentar-list__komentar-detail {
+	margin: 8px;
+	padding: 8px;
+	border-radius: 8px;
+}
+
+.komentar-list__komentar-detail:nth-child(even) {
+	background-color: #ddd;
+}
+
+.komentar-list__komentar-detail:nth-child(odd) {
+	background-color: #bbb;
+}

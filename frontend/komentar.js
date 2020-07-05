@@ -82,7 +82,7 @@ template.innerHTML = `
 			<textarea id="komentar-new-text" class="komentar-editor__komentar-new__komentar-new-text" rows="3" cols="5" name="komentar-new-text" placeholder="Comment" required></textarea>
 			<section>
 				<input id="komentar-new-name" class="komentar-editor__komentar-new__komentar-new-name" type="text" name="komentar-new-name" placeholder="Name" required>
-				<div id="komentar-new-submit" class="komentar-editor__komentar-new__komentar-new-submit">Submit</div>
+				<button id="komentar-new-submit" class="komentar-editor__komentar-new__komentar-new-submit">Submit</button>
 			</section>
 		</form>
 	</section>
@@ -129,6 +129,7 @@ class KomentarApp extends HTMLElement {
 			// set comment api host
 			baseUrl: this.getAttribute("host") || "http://localhost:3000",
 			komentars: [],
+			activeReplyId: 0,
 		};
 
 		// attach shadow DOM to the parent element.
@@ -149,15 +150,30 @@ class KomentarApp extends HTMLElement {
 
 	connectedCallback() {
 		console.log("Komentar app is added to DOM");
-		console.log(`comment api host at ${this.baseUrl}`);
+		console.log(`comment api host at ${this.state.baseUrl}`);
 
 		// fetch komentar list
 		this.fetchKomentar();
 
 		// install event listener
+		// create comment listener
 		this.shadowRoot
 			.getElementById("komentar-new-submit")
 			.addEventListener("click", () => this.createCommentHandler(this));
+
+		// create click reply listener
+		const replyButtonElements = this.shadowRoot.querySelector("section").getElementsByClassName("create-reply");
+		console.log(replyButtonElements);
+		Array.from(replyButtonElements).forEach((element) => {
+			console.log("add event listener", element);
+			element.addEventListener("click", () => this.clickReplyHandler(this));
+		});
+
+		// create submit reply listener
+		const submitReplyElements = this.shadowRoot.querySelector("section").getElementsByClassName("reply-submit");
+		Array.from(submitReplyElements).forEach((element) => {
+			element.addEventListener("click", () => this.createReplyHandler(this));
+		});
 	}
 
 	adoptedCallback() {
@@ -168,9 +184,22 @@ class KomentarApp extends HTMLElement {
 		console.log("Komentar app removed from DOM");
 
 		// uninstall event listener
+		// create comment listener
 		this.shadowRoot
 			.getElementById("komentar-new-submit")
 			.removeEventListener("click", () => this.createCommentHandler(this));
+
+		// create reply listener
+		const replyButtonElements = this.shadowRoot.querySelector("section").getElementsByClassName("create-reply");
+		Array.from(replyButtonElements).forEach((element) => {
+			element.removeEventListener("click", () => this.clickReplyHandler(this));
+		});
+
+		// create submit reply listener
+		const submitReplyElements = this.shadowRoot.querySelector("section").getElementsByClassName("reply-submit");
+		Array.from(submitReplyElements).forEach((element) => {
+			element.removeEventListener("click", () => this.createReplyHandler(this));
+		});
 	}
 
 	setState(newState) {
@@ -183,18 +212,20 @@ class KomentarApp extends HTMLElement {
 		this.renderKomentarList();
 	}
 
+	getAuthor() {
+		// const author = parent.shadowRoot.getElementById("komentar-new-name").value;
+		// console.log(author);
+		return document.querySelector(KOMENTAR_TAG).shadowRoot.getElementById("komentar-new-name").value;
+	}
+
 	createCommentHandler(parent) {
 		// get author
-		const author = document.querySelector(KOMENTAR_TAG).shadowRoot.getElementById("komentar-new-name").value;
-		// const author = parent.shadowRoot.getElementById("komentar-new-name").value;
-		// const author = "Ari Maulana";
-		console.log(author);
+		const author = this.getAuthor();
 
 		// get content
 		const content = document.querySelector(KOMENTAR_TAG).shadowRoot.getElementById("komentar-new-text").value;
 		// const content = parent.shadowRoot.getElementById("komentar-new-text");
-		// const content = `Test Comment on ${new Date().toDateString()}`;
-		console.log(content);
+		// console.log(content);
 
 		// get url
 		const currentUrl = location.host + location.pathname;
@@ -218,12 +249,60 @@ class KomentarApp extends HTMLElement {
 		Helper.request(requestUrl, requestOptions)
 			.then(() => {
 				console.log(`Comment submitted.`);
+				this.fetchKomentar();
 			})
 			.catch((error) => {
 				console.log(`Comment failed to submit`, error);
 			});
+	}
 
-		// rerender
+	clickReplyHandler(parent) {
+		// get id
+		const elementId = this.id.split("-");
+		const id = elementId[elementId.length - 1];
+
+		parent.setState({ activeReplyId: parseInt(id) });
+	}
+
+	createReplyHandler(parent) {
+		// // get id
+		// const elementId = this.id.split("-");
+		// const id = elementId[elementId.length - 1];
+		const id = this.state.activeReplyId;
+
+		// get author
+		const author = this.getAuthor();
+
+		// get reply content
+		const content = document.querySelector(KOMENTAR_TAG).shadowRoot.getElementById(`input-reply-${id}`).value;
+
+		// get url
+		const currentUrl = location.host + location.pathname;
+
+		// prep data
+		console.log(parent);
+		const requestUrl = `${parent.state.baseUrl}/comments/${id}/replies`;
+		const requestOptions = {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				author: author,
+				content: content,
+				url: currentUrl,
+			}),
+		};
+
+		// submit data
+		Helper.request(requestUrl, requestOptions)
+			.then(() => {
+				console.log(`Reply submitted.`);
+				this.fetchKomentar();
+			})
+			.catch((error) => {
+				console.log(`Reply failed to submit`, error);
+			});
 	}
 
 	fetchKomentar() {
@@ -247,6 +326,20 @@ class KomentarApp extends HTMLElement {
 			});
 	}
 
+	renderReplyBox(id) {
+		const isReplyBoxHidden = id != this.state.activeReplyId;
+		console.log("replyboxhidden", id, this.state.activeReplyId, isReplyBoxHidden);
+		return isReplyBoxHidden
+			? `<section id="${id}" class="create-reply">Reply</section>`
+			: `
+				<section id="reply-${id}">
+					<input id="reply-input-${id}" type="text" name="komentar-reply-content" placeholder="Reply..." required>
+					<section id="reply-cancel-${id}">Cancel</section>
+					<section id="reply-submit-${id}" class="reply-submit">Reply</section>
+				</section>
+			`;
+	}
+
 	renderKomentarList() {
 		const isKomentarExist = this.state.komentars.length > 0;
 
@@ -258,9 +351,10 @@ class KomentarApp extends HTMLElement {
 			const mappedInnerHTML = this.state.komentars.map((komentar) => {
 				const { id, author, content, date } = komentar;
 				return `
-					<section id="komentar-${id}">
+					<section id="komentar-${id}" class="komentar-list__komentar-detail">
 						<span><b>${author}</b> on ${new Date(date).toDateString()}</span>
 						<p>${content}</p>
+						${this.renderReplyBox(id)}
 					</section>
 				`;
 			});

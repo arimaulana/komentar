@@ -1,6 +1,7 @@
 # Komentar
 
 This app is used for commenting system in the static site using typescript.
+Note: Its not production ready yet. Still so much improvement in many aspect. Currently its for my learning purpose.
 
 Why using TypeScript? Two basic reason, I just want a simple environment for this project which good to go for the API and Frontend part. The last one is, I've done enough of NodeJS and want to explore more about OOP.
 

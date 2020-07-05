@@ -1,8 +1,18 @@
 textarea {
 	margin: 0;
-	padding: 0;
+	padding: 4px;
 	outline: 0;
 	border: 0;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+
+.truncate {
+	width: 250px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .komentar-wrapper {
@@ -10,12 +20,24 @@ textarea {
 	margin: 0 auto;
 	padding: 8px;
 
-	border: solid black;
+	border: dashed black;
+	border-radius: 4px;
 }
 
 .komentar-info {
-	height: 32px;
+	height: 40px;
+	padding: 4px;
 	/* background-color: #444444; */
+}
+
+.komentar-info__title {
+	font-weight: bold;
+}
+
+.komentar-info__error {
+	min-width: 400px;
+	color: red;
+	padding: 4px;
 }
 
 .komentar-editor {

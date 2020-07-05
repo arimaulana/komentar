@@ -75,11 +75,12 @@ template.innerHTML = `
 </style>
 <section class="komentar-wrapper">
 	<section class="komentar-info">
-		Komentar Info
+		<section class="komentar-info__title">Comment</section>
+		<section id="komentar-error" class="komentar-info__error"></section>
 	</section>
 	<section class="komentar-editor">
 		<form id="komentar-new" class="komentar-editor__komentar-new">
-			<textarea id="komentar-new-text" class="komentar-editor__komentar-new__komentar-new-text" rows="3" cols="5" name="komentar-new-text" placeholder="Comment" required></textarea>
+			<textarea id="komentar-new-text" class="komentar-editor__komentar-new__komentar-new-text" rows="3" cols="5" name="komentar-new-text" placeholder="Have any thought? I'd like to hear that." required></textarea>
 			<section>
 				<input id="komentar-new-name" class="komentar-editor__komentar-new__komentar-new-name" type="text" name="komentar-new-name" placeholder="Name" required>
 				<button id="komentar-new-submit" class="komentar-editor__komentar-new__komentar-new-submit">Submit</button>
@@ -97,7 +98,8 @@ class Helper {
 		if (response.status >= 200 && response.status < 300) {
 			return Promise.resolve(response);
 		} else {
-			return Promise.reject(new Error(response.statusText));
+			// return Promise.reject(new Error(response.statusText));
+			return Promise.reject(response);
 		}
 	}
 
@@ -113,16 +115,18 @@ class Helper {
 				.then((data) => {
 					resolve(data);
 				})
-				.catch((error) => {
-					reject(error);
-				});
+				.catch(Helper.json)
+				.then(reject);
+			// .catch((error) => {
+			// 	reject(error);
+			// });
 		});
 	}
 }
 
 class KomentarApp extends HTMLElement {
 	static get observedAttributes() {
-		return ["host", "komentars", "reply_comment_id"];
+		return ["host", "komentars", "reply_comment_id", "error"];
 	}
 
 	constructor() {
@@ -198,13 +202,8 @@ class KomentarApp extends HTMLElement {
 	}
 
 	render() {
+		this.renderError();
 		this.renderKomentarList();
-	}
-
-	getAuthor() {
-		// const author = parent.shadowRoot.getElementById("komentar-new-name").value;
-		// console.log(author);
-		return document.querySelector(KOMENTAR_TAG).shadowRoot.getElementById("komentar-new-name").value;
 	}
 
 	getBaseUrl() {
@@ -229,6 +228,20 @@ class KomentarApp extends HTMLElement {
 
 	setReplyCommentId(newReplyCommentId) {
 		this.setAttribute("reply_comment_id", newReplyCommentId);
+	}
+
+	getError() {
+		return this.getAttribute("error");
+	}
+
+	setError(newError) {
+		this.setAttribute("error", newError);
+	}
+
+	getAuthor() {
+		// const author = parent.shadowRoot.getElementById("komentar-new-name").value;
+		// console.log(author);
+		return document.querySelector(KOMENTAR_TAG).shadowRoot.getElementById("komentar-new-name").value;
 	}
 
 	createCommentHandler(event, parent) {
@@ -265,7 +278,8 @@ class KomentarApp extends HTMLElement {
 				parent.fetchKomentar();
 			})
 			.catch((error) => {
-				console.log(`Comment failed to submit`, error);
+				console.log(`Comment failed to submit`, JSON.stringify(error));
+				parent.setError(error.message);
 			});
 	}
 
@@ -308,6 +322,7 @@ class KomentarApp extends HTMLElement {
 			})
 			.catch((error) => {
 				console.log(`Reply failed to submit`, error);
+				parent.setError(error.message);
 			});
 	}
 
@@ -330,7 +345,15 @@ class KomentarApp extends HTMLElement {
 			})
 			.catch((error) => {
 				console.log("Request failed", error);
+				this.setError(error.message);
 			});
+	}
+
+	renderError() {
+		const errorMessage = this.getError();
+
+		const element = this.shadowRoot.getElementById("komentar-error");
+		element.innerHTML = errorMessage;
 	}
 
 	renderReplyBox(id) {

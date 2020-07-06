@@ -16,7 +16,7 @@ import { CommentService } from "../../../domain/service/CommentService";
 import { CreateCommentDTO, ModifyCommentDTO } from "./CommentDTO";
 import { BaseController } from "../shared/BaseController";
 
-@Controller("comments")
+@Controller("api/comments")
 export class CommentController extends BaseController {
 	private readonly commentService: CommentService;
 

@@ -199,6 +199,12 @@ class KomentarApp extends HTMLElement {
 		Array.from(submitReplyElements).forEach((element) => {
 			element.addEventListener("click", (e) => this.createReplyHandler(e, this));
 		});
+
+		// create cancel reply listener
+		const cancelReplyElements = this.shadowRoot.querySelector("section").getElementsByClassName("reply-cancel");
+		Array.from(cancelReplyElements).forEach((element) => {
+			element.addEventListener("click", (e) => this.cancelReplyHandler(e, this));
+		});
 	}
 
 	render() {
@@ -326,6 +332,10 @@ class KomentarApp extends HTMLElement {
 			});
 	}
 
+	cancelReplyHandler(event, parent) {
+		parent.setReplyCommentId("0");
+	}
+
 	fetchKomentar() {
 		const baseUrl = this.getBaseUrl();
 		const currentUrl = location.host + location.pathname;
@@ -362,10 +372,15 @@ class KomentarApp extends HTMLElement {
 		return isReplyBoxHidden
 			? `<section id="${id}" class="create-reply">Reply</section>`
 			: `
-				<section id="reply-${id}">
-					<input id="reply-input-${id}" type="text" name="komentar-reply-content" placeholder="Reply..." required>
-					<section id="reply-cancel-${id}">Cancel</section>
-					<section id="reply-submit-${id}" class="reply-submit">Reply</section>
+				<section id="reply-${id}" class="komentar-reply">
+					<section class="komentar-reply__input">
+						<!--<textarea id="reply-input-${id}" rows="1" cols="5" name="komentar-reply-content" placeholder="Reply..." required></textarea>-->
+						<input id="reply-input-${id}" type="text" name="komentar-reply-content" placeholder="Reply..." required>
+					</section>
+					<section class="komentar-reply__button">
+						<section id="reply-cancel-${id}" class="reply-cancel">Cancel</section>
+						<section id="reply-submit-${id}" class="reply-submit">Reply</section>
+					</section>
 				</section>
 			`;
 	}

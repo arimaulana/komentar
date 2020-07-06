@@ -29,8 +29,10 @@ export class CommentServiceImpl implements CommentService {
 		const id = `${uuidv4()}-${new Date().getTime()}`;
 
 		// validate parent id
-		const parentComment = await this.commentRepository.findById(parentId);
-		if (!parentComment) throw new Error("No parent comment found.");
+		if (parentId) {
+			const parentComment = await this.commentRepository.findById(parentId);
+			if (!parentComment) throw new Error("No parent comment found.");
+		}
 
 		const comment = Comment.createComment
 			.setId(id)

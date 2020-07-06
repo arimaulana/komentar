@@ -104,3 +104,24 @@ textarea {
 .komentar-list__komentar-detail:nth-child(odd) {
 	background-color: #bbb;
 }
+
+.komentar-reply {
+
+}
+
+.komentar-reply__input {
+	margin: 8px 0;
+}
+
+.komentar-reply__button {
+	display: flex;
+	flex-direction: row;
+}
+
+.komentar-reply__button > * {
+	padding: 4px;
+	margin-right: 8px;
+	background-color: #666;
+	color: #eee;
+	border-radius: 4px;
+}

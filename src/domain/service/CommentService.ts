@@ -12,7 +12,7 @@ export interface CommentService {
 
 	findCommentByID(id: string): Promise<Comment>;
 
-	createComment(author: string, content: string, url: string): Promise<string>;
+	createComment(author: string, content: string, url: string, parentId?: string): Promise<string>;
 
 	modifyComment(id: string, content: string): Promise<void>;
 

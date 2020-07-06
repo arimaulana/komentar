@@ -39,7 +39,7 @@ Using webcomponent so it can be as simple as using a html tag in any site. In th
 
 #### Frontend Part
 - Cannot use this keyword (parent in the code) inside an event handler function. always got an empty object {} when calling straight from shadowRoot.getElementById('the-element-id').value. My current workaround is using calling from the document, but the cons is, I should define the custom element tag again. Hmm yea i know its not elegant, but works.
-- Just realized event listener removed after re-render element and in my case, i'm not re-adding event listener (this is my bad habit to use react like in vanilla js which is poorly knowledge about html and js). time to use the right way observedAttribute?
+- Just realized event listener removed after re-render element and in my case, i'm not re-adding event listener (this is my bad habit to use react like in vanilla js which is poorly knowledge about html and js). Solved by adding event listener (only for non-template element event listener) after calling re-render function, In this time, I got a help from using observedAttributes feature.
 
 ### Reference
 
@@ -48,6 +48,7 @@ Using webcomponent so it can be as simple as using a html tag in any site. In th
 - https://www.baeldung.com/hexagonal-architecture-ddd-spring
 
 #### Frontend Part
+- https://html.spec.whatwg.org/multipage/custom-elements.html
 - https://developers.google.com/web/fundamentals/web-components/customelements
 - https://developers.google.com/web/fundamentals/web-components/shadowdom
 - https://www.thinktecture.com/en/web-components/native-web-components-without-framework/

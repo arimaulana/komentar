@@ -68,6 +68,21 @@ export class CommentController extends BaseController {
 		return this.created(createdCommentId);
 	}
 
+	@Post(":id/replies")
+	public async createReplyComment(@Param("id") commentId: string, @Body() createCommentDTO: CreateCommentDTO) {
+		const { author, content, url } = createCommentDTO;
+		if (!author) {
+			return this.badRequest("Author required.");
+		} else if (!content) {
+			return this.badRequest("Content required.");
+		} else if (!url) {
+			return this.badRequest("Url required.");
+		}
+
+		const createdReplyCommentId = await this.commentService.createComment(author, content, url, commentId);
+		return this.created(createdReplyCommentId);
+	}
+
 	@Put(":id")
 	public async modifyComment(@Param("id") id: string, @Body() modifyCommentDTO: ModifyCommentDTO) {
 		const { content } = modifyCommentDTO;

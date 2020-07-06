@@ -28,6 +28,10 @@ export class CommentServiceImpl implements CommentService {
 	public async createComment(author: string, content: string, url: string, parentId?: string): Promise<string> {
 		const id = `${uuidv4()}-${new Date().getTime()}`;
 
+		// validate parent id
+		const parentComment = await this.commentRepository.findById(parentId);
+		if (!parentComment) throw new Error("No parent comment found.");
+
 		const comment = Comment.createComment
 			.setId(id)
 			.setAuthor(author)

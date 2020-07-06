@@ -5,9 +5,19 @@ template.innerHTML = `
 <style>
 	textarea {
 		margin: 0;
-		padding: 0;
+		padding: 4px;
 		outline: 0;
 		border: 0;
+		-webkit-border-radius: 4px;
+		-moz-border-radius: 4px;
+		border-radius: 4px;
+	}
+
+	.truncate {
+		width: 250px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.komentar-wrapper {
@@ -15,12 +25,24 @@ template.innerHTML = `
 		margin: 0 auto;
 		padding: 8px;
 
-		border: solid black;
+		border: dashed black;
+		border-radius: 4px;
 	}
 
 	.komentar-info {
-		height: 32px;
+		height: 40px;
+		padding: 4px;
 		/* background-color: #444444; */
+	}
+
+	.komentar-info__title {
+		font-weight: bold;
+	}
+
+	.komentar-info__error {
+		min-width: 400px;
+		color: red;
+		padding: 4px;
 	}
 
 	.komentar-editor {
@@ -47,7 +69,7 @@ template.innerHTML = `
 		box-sizing: border-box;
 
 		width: 100%;
-		
+
 		margin-bottom: 8px;
 	}
 
@@ -70,7 +92,43 @@ template.innerHTML = `
 	}
 
 	.komentar-list {
+		padding: 8px;
 		/* not implemented yet */
+	}
+
+	.komentar-list__komentar-detail {
+		margin: 8px;
+		padding: 8px;
+		border-radius: 8px;
+	}
+
+	.komentar-list__komentar-detail:nth-child(even) {
+		background-color: #ddd;
+	}
+
+	.komentar-list__komentar-detail:nth-child(odd) {
+		background-color: #bbb;
+	}
+
+	.komentar-reply {
+
+	}
+
+	.komentar-reply__input {
+		margin: 8px 0;
+	}
+
+	.komentar-reply__button {
+		display: flex;
+		flex-direction: row;
+	}
+
+	.komentar-reply__button > * {
+		padding: 4px;
+		margin-right: 8px;
+		background-color: #666;
+		color: #eee;
+		border-radius: 4px;
 	}
 </style>
 <section class="komentar-wrapper">
@@ -141,11 +199,11 @@ class KomentarApp extends HTMLElement {
 		// clone template content nodes to the shadow DOM
 		shadowRoot.appendChild(template.content.cloneNode(true));
 
-		// set styles // comment for production
-		const link = document.createElement("link");
-		link.setAttribute("rel", "stylesheet");
-		link.setAttribute("href", "./styles.css");
-		shadowRoot.appendChild(link);
+		// // set styles // comment for production
+		// const link = document.createElement("link");
+		// link.setAttribute("rel", "stylesheet");
+		// link.setAttribute("href", "./styles.css");
+		// shadowRoot.appendChild(link);
 	}
 
 	connectedCallback() {
@@ -324,6 +382,7 @@ class KomentarApp extends HTMLElement {
 		Helper.request(requestUrl, requestOptions)
 			.then(() => {
 				console.log(`Reply submitted.`);
+				parent.setReplyCommentId(null)
 				parent.fetchKomentar();
 			})
 			.catch((error) => {
@@ -333,7 +392,7 @@ class KomentarApp extends HTMLElement {
 	}
 
 	cancelReplyHandler(event, parent) {
-		parent.setReplyCommentId("0");
+		parent.setReplyCommentId(null);
 	}
 
 	fetchKomentar() {

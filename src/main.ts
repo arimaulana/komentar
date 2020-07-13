@@ -7,11 +7,13 @@ import { AppModule } from "./app.module";
 async function bootstrap() {
 	const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+	app.enableCors({
+		origin: "*",
+	});
+
 	app.useStaticAssets(join(__dirname, "..", "public"), {
 		prefix: "/public/",
 	});
-
-	app.enableCors();
 
 	await app.listen(3000);
 }

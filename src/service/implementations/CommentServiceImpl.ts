@@ -3,7 +3,7 @@ import { Injectable, Inject } from "@nestjs/common";
 
 import { CommentService } from "../CommentService";
 import { CommentRepository } from "../../repository/CommentRepository";
-import { Comment } from "../../Comment";
+import { Comment } from "../../domain/Comment";
 
 @Injectable()
 export class CommentServiceImpl implements CommentService {

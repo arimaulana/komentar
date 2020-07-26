@@ -1,22 +1,52 @@
-version: '3.7'
+version: "3.7"
 
 services:
-    komentar:
-        container_name: komentar
+    komentar-app:
+        container_name: komentar-app
         build:
             context: .
             target: development
         volumes:
             - .:/usr/src/app
-            - /usr/src/app/node_modules
         ports:
             - ${APP_PORT}:${APP_PORT}
-            - 9229:9229
-        command: npm run start:dev
+        command: sh -c "dockerize -wait tcp://komentar-db:3306 -timeout 20s && npm start"
         env_file:
             - .env
+        environment:
+            DOCKER_DB_HOST: komentar-db
         networks:
-            - webnet
+            - komentarnet
+        depends_on:
+            - komentar-db
+
+    komentar-db:
+        image: mysql:5.7.29
+        container_name: komentar-db
+        restart: always
+        command: --sql_mode="STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION"
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+        ports:
+            - 3306:3306
+        networks:
+            - komentarnet
+        volumes:
+            - ./dump/sql-data:/docker-entrypoint-initdb.d
+
+    komentar-pma:
+        image: phpmyadmin/phpmyadmin
+        container_name: komentar-pma
+        restart: always
+        environment:
+            PMA_HOST: komentar-db
+            PMA_PORT: 3306
+        ports:
+            - ${PMA_PORT:-8001}:80
+        networks:
+            - komentarnet
+        depends_on:
+            - komentar-db
 
 networks:
-    webnet:
+    komentarnet:

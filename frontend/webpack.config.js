@@ -2,17 +2,16 @@ const path = require("path");
 
 module.exports = {
 	devServer: {
-		contentBase: __dirname + "/frontend/",
 		compress: true,
 		host: "0.0.0.0",
 		port: 8080,
 	},
 	mode: "production",
 	entry: {
-		komentar: __dirname + "/frontend/komentar.js",
+		komentar: __dirname + "/komentar.js",
 	},
 	output: {
-		path: path.resolve(__dirname, "public"),
+		path: path.resolve(__dirname, "..", "public"),
 		filename: "[name].js",
 	},
 	module: {

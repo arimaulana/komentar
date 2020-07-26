@@ -1,0 +1,20 @@
+{
+  "name": "komentar-webcomponent",
+  "version": "1.0.0",
+  "description": "Komentar Web Component App",
+  "main": "komentar.js",
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack-dev-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ari Maulana <maulana.ari@protonmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "file-loader": "^6.0.0",
+    "html-loader": "^1.1.0",
+    "webpack": "^4.44.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0"
+  }
+}

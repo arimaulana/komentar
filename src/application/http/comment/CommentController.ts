@@ -12,11 +12,11 @@ import {
 	Delete,
 } from "@nestjs/common";
 
-import { CommentService } from "../../../domain/service/CommentService";
+import { CommentService } from "../../../service/CommentService";
 import { CreateCommentDTO, ModifyCommentDTO } from "./CommentDTO";
 import { BaseController } from "../shared/BaseController";
 
-@Controller("api/comments")
+@Controller("comments")
 export class CommentController extends BaseController {
 	private readonly commentService: CommentService;
 

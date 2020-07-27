@@ -23,9 +23,10 @@ Why using TypeScript? Two basic reason, I just want a simple environment for thi
 Using webcomponent so it can be as simple as using a html tag in any site. In this part, I'm using webpack to help me develop and bundling into production.
 
 ### Milestone
-- Adding reply feature
+~~- Adding reply feature~~
 
 #### Backend Part
+~~- Implement real database repository with TypeORM~~
 - Adding authorization to api
 
 #### Frontend Part

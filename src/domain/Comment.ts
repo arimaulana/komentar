@@ -1,10 +1,15 @@
+export enum CommentStatus {
+	SHOWED = "showed",
+	HIDDEN = "hidden"
+}
+
 export class Comment {
 	private id: string;
 	private author: string;
 	private content: string;
 	private url: string; // url where the comment live
 	private date: Date;
-	private status: string;
+	private status: CommentStatus;
 	private parentId: string;
 
 	private constructor(
@@ -13,7 +18,7 @@ export class Comment {
 		content: string,
 		url: string,
 		date: Date,
-		status: string,
+		status: CommentStatus,
 		parentId: string
 	) {
 		this.id = id;
@@ -31,7 +36,7 @@ export class Comment {
 		private commentContent: string;
 		private commentUrl: string;
 		private commentDate: Date = new Date();
-		private commentStatus: string = "SHOWED";
+		private commentStatus: CommentStatus = CommentStatus.SHOWED;
 		private commentParentId: string;
 
 		public setId(id: string): CommentBuilder {
@@ -59,7 +64,7 @@ export class Comment {
 			return this;
 		}
 
-		public setStatus(status: string): CommentBuilder {
+		public setStatus(status: CommentStatus): CommentBuilder {
 			this.commentStatus = status;
 			return this;
 		}
@@ -93,14 +98,14 @@ export class Comment {
 	}
 
 	public hideComment(): void {
-		this.status = "HIDDEN";
+		this.status = CommentStatus.HIDDEN;
 	}
 
 	public showComment(): void {
-		this.status = "SHOWED";
+		this.status = CommentStatus.SHOWED;
 	}
 
-	private validateContent(): void {}
+	private validateContent(): void { }
 
 	// getters
 	public getId(): string {
@@ -123,7 +128,7 @@ export class Comment {
 		return this.date;
 	}
 
-	public getStatus(): string {
+	public getStatus(): CommentStatus {
 		return this.status;
 	}
 

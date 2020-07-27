@@ -18,6 +18,8 @@ Why using TypeScript? Two basic reason, I just want a simple environment for thi
 ## Project Architecture
 
 #### Backend Part
+Using hexagonal architecture with simple domain layer (domain business, repository port, service port) and using nestjs for current implementation.
+
 
 #### Frontend Part
 Using webcomponent so it can be as simple as using a html tag in any site. In this part, I'm using webpack to help me develop and bundling into production.
@@ -35,7 +37,6 @@ Using webcomponent so it can be as simple as using a html tag in any site. In th
 ## Cheatsheet
 
 - `docker-compose up -d`
-- `docker-compose -f docker-compose.debug.yml up -d`
 - `docker-compose down`
 - `docker-compsoe up --build -V` # -V argument will remove any anonymous volumes and create them again
 - `docker-compoes logs -f <container_name>`

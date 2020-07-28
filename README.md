@@ -29,9 +29,12 @@ Using webcomponent so it can be as simple as using a html tag in any site. In th
 
 #### Backend Part
 ~~- Implement real database repository with TypeORM~~
-- Adding authorization to api
+~~- Adding authorization to api~~
+- Adding notification service
+- Adding role based authentication in several api (member, admin)
 
 #### Frontend Part
+- Adding authentication when creating comment
 - Adding admin site
 
 ## Cheatsheet

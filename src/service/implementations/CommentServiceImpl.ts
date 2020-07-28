@@ -3,7 +3,7 @@ import { Injectable, Inject } from "@nestjs/common";
 
 import { CommentService } from "../CommentService";
 import { CommentRepository } from "../../repository/CommentRepository";
-import { Comment } from "../../domain/Comment";
+import { Comment, CommentBuilder } from "../../domain/Comment";
 
 @Injectable()
 export class CommentServiceImpl implements CommentService {
@@ -34,7 +34,7 @@ export class CommentServiceImpl implements CommentService {
 			if (!parentComment) throw new Error("No parent comment found.");
 		}
 
-		const comment = Comment.createComment
+		const comment = new CommentBuilder()
 			.setId(id)
 			.setAuthor(author)
 			.setContent(content)

@@ -1,7 +1,7 @@
 import { Repository } from "typeorm";
 import { CommentRepository } from "../../CommentRepository";
 import { CommentModel } from "./models/CommentModel";
-import { Comment } from "../../../domain/Comment";
+import { Comment, CommentBuilder } from "../../../domain/Comment";
 
 export class MySQLCommentRepository implements CommentRepository {
 
@@ -12,7 +12,7 @@ export class MySQLCommentRepository implements CommentRepository {
     }
 
     private persistenceToDomain(comment: CommentModel) {
-        return !comment ? null : Comment.createComment
+        return !comment ? null : new CommentBuilder()
             .setId(comment.id)
             .setParentId(comment.parent_id)
             .setAuthor(comment.author)

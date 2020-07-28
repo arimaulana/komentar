@@ -12,7 +12,7 @@ export class Comment {
 	private status: CommentStatus;
 	private parentId: string;
 
-	private constructor(
+	public constructor(
 		id: string,
 		author: string,
 		content: string,
@@ -29,65 +29,6 @@ export class Comment {
 		this.status = status;
 		this.parentId = parentId;
 	}
-
-	public static createComment = new (class CommentBuilder {
-		private commentId: string;
-		private commentAuthor: string;
-		private commentContent: string;
-		private commentUrl: string;
-		private commentDate: Date = new Date();
-		private commentStatus: CommentStatus = CommentStatus.SHOWED;
-		private commentParentId: string;
-
-		public setId(id: string): CommentBuilder {
-			this.commentId = id;
-			return this;
-		}
-
-		public setAuthor(author: string): CommentBuilder {
-			this.commentAuthor = author;
-			return this;
-		}
-
-		public setContent(content: string): CommentBuilder {
-			this.commentContent = content;
-			return this;
-		}
-
-		public setUrl(url: string): CommentBuilder {
-			this.commentUrl = url;
-			return this;
-		}
-
-		public setDate(date: Date): CommentBuilder {
-			this.commentDate = date;
-			return this;
-		}
-
-		public setStatus(status: CommentStatus): CommentBuilder {
-			this.commentStatus = status;
-			return this;
-		}
-
-		public setParentId(parentId: string): CommentBuilder {
-			if (!parentId) return this;
-
-			this.commentParentId = parentId;
-			return this;
-		}
-
-		public build(): Comment {
-			return new Comment(
-				this.commentId,
-				this.commentAuthor,
-				this.commentContent,
-				this.commentUrl,
-				this.commentDate,
-				this.commentStatus,
-				this.commentParentId
-			);
-		}
-	})();
 
 	public modifyComment(content: string): void {
 		// validate content
@@ -134,5 +75,64 @@ export class Comment {
 
 	public getParentId(): string {
 		return this.parentId;
+	}
+}
+
+export class CommentBuilder {
+	private commentId: string;
+	private commentAuthor: string;
+	private commentContent: string;
+	private commentUrl: string;
+	private commentDate: Date = new Date();
+	private commentStatus: CommentStatus = CommentStatus.SHOWED;
+	private commentParentId: string;
+
+	public setId(id: string): CommentBuilder {
+		this.commentId = id;
+		return this;
+	}
+
+	public setAuthor(author: string): CommentBuilder {
+		this.commentAuthor = author;
+		return this;
+	}
+
+	public setContent(content: string): CommentBuilder {
+		this.commentContent = content;
+		return this;
+	}
+
+	public setUrl(url: string): CommentBuilder {
+		this.commentUrl = url;
+		return this;
+	}
+
+	public setDate(date: Date): CommentBuilder {
+		this.commentDate = date;
+		return this;
+	}
+
+	public setStatus(status: CommentStatus): CommentBuilder {
+		this.commentStatus = status;
+		return this;
+	}
+
+	public setParentId(parentId: string): CommentBuilder {
+		if (!parentId) return this;
+
+		this.commentParentId = parentId;
+		return this;
+	}
+
+	public build(): Comment {
+		return new Comment(
+			this.commentId,
+			this.commentAuthor,
+			this.commentContent,
+			this.commentUrl,
+			this.commentDate,
+			this.commentStatus,
+			this.commentParentId
+		);
 	}
 }

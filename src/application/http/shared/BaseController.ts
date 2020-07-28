@@ -22,4 +22,9 @@ export abstract class BaseController {
 	public badRequest(message: string) {
 		throw new HttpException(message || "Bad Request", HttpStatus.BAD_REQUEST);
 	}
+
+	public fail(error: Error) {
+		if (error.hasOwnProperty('status')) throw error
+		throw new HttpException(error.message || "Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }

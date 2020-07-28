@@ -1,9 +1,9 @@
-import { Entity, Column, PrimaryColumn, EntitySchema } from 'typeorm';
+import { Entity, Column, PrimaryColumn } from 'typeorm';
 
 import { CommentStatus } from '../../../../domain/Comment';
 
 @Entity({
-    name: 'comments'
+    name: 'comment'
 })
 export class CommentModel {
 
@@ -43,15 +43,18 @@ export class CommentModel {
     url: string;
 
     @Column({
-        type: "timestamp"
-    })
-    date: Date;
-
-    @Column({
         type: "enum",
         enum: CommentStatus,
         comment: 'used for storing comment status, i.e. (showed / hidden).',
         default: CommentStatus.SHOWED
     })
     status: CommentStatus;
+
+    @Column({
+        type: "timestamp",
+        comment: 'Creation time',
+        default: () => "CURRENT_TIMESTAMP"
+    })
+    created_date: Date;
+
 }

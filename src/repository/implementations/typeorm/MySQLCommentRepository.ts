@@ -12,14 +12,14 @@ export class MySQLCommentRepository implements CommentRepository {
     }
 
     private persistenceToDomain(comment: CommentModel) {
-        return Comment.createComment
+        return !comment ? null : Comment.createComment
             .setId(comment.id)
             .setParentId(comment.parent_id)
             .setAuthor(comment.author)
             .setContent(comment.content)
             .setUrl(comment.url)
-            .setDate(comment.date)
             .setStatus(comment.status)
+            .setDate(comment.created_date)
             .build();
     }
 
@@ -65,8 +65,8 @@ export class MySQLCommentRepository implements CommentRepository {
                     author: comment.getAuthor(),
                     content: comment.getContent(),
                     url: comment.getUrl(),
-                    date: comment.getDate(),
-                    status: comment.getStatus()
+                    status: comment.getStatus(),
+                    created_date: comment.getDate(),
                 }
             ])
             .execute();
@@ -85,8 +85,8 @@ export class MySQLCommentRepository implements CommentRepository {
                 author: comment.getAuthor(),
                 content: comment.getContent(),
                 url: comment.getUrl(),
-                date: comment.getDate(),
-                status: comment.getStatus()
+                status: comment.getStatus(),
+                created_date: comment.getDate(),
             })
             .where("id = :id", { id: id })
             .execute();

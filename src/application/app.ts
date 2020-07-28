@@ -14,5 +14,6 @@ export async function App() {
         prefix: "/public/",
     });
 
-    await app.listen(3000);
+    const PORT = process.env.APP_PORT || 3000;
+    await app.listen(PORT, () => console.log(`Server successfully started on port ${PORT}.`));
 }

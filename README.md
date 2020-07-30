@@ -5,6 +5,20 @@ Note: Its not production ready yet. Still so much improvement in many aspect. Cu
 
 Why using TypeScript? Two basic reason, I just want a simple environment for this project which good to go for the API and Frontend part. The last one is, I've done enough of NodeJS and want to explore more about OOP.
 
+## Installation
+
+1. Clone this project and cd into the cloned folder
+2. Run `npm install && cd frontend && npm install && npm run build && cd ..`
+3. Setup environment variable
+4. Run `docker-compose up -d`
+5. Put `<script type="module" src="http://YOUR_HOST/public/komentar.js"></script>` in your site head tag
+6. Put `<komentar-app host="http://YOUR_HOST"></komentar-app>` in your site body tag.
+Note!! host attribute in step 6 was where your komentar api live.
+
+or if you want to test locally, you could just do step 1 until 4
+and go to frontend folder and run `npm start`
+now you could go to localhost:8080
+
 ## Commenting System Design
 
 - As a reader, I want to be able to view comments in the article

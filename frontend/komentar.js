@@ -322,7 +322,7 @@ class KomentarApp extends HTMLElement {
 
 		// prep data
 		const baseUrl = parent.getBaseUrl();
-		const requestUrl = `${baseUrl}/api/comments`;
+		const requestUrl = `${baseUrl}/comments`;
 		const requestOptions = {
 			method: "POST",
 			headers: {
@@ -365,7 +365,7 @@ class KomentarApp extends HTMLElement {
 
 		// prep data
 		const baseUrl = parent.getBaseUrl();
-		const requestUrl = `${baseUrl}/api/comments/${id}/replies`;
+		const requestUrl = `${baseUrl}/comments/${id}/replies`;
 		const requestOptions = {
 			method: "POST",
 			headers: {
@@ -398,7 +398,7 @@ class KomentarApp extends HTMLElement {
 	fetchKomentar() {
 		const baseUrl = this.getBaseUrl();
 		const currentUrl = location.host + location.pathname;
-		const requestUrl = `${baseUrl}/api/comments?url=${currentUrl}&host=${location.host}&slug=${location.pathname}`;
+		const requestUrl = `${baseUrl}/comments?url=${currentUrl}&host=${location.host}&slug=${location.pathname}`;
 		const requestOptions = {
 			method: "GET",
 			headers: {

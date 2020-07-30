@@ -318,7 +318,9 @@ class KomentarApp extends HTMLElement {
 		// console.log(content);
 
 		// get url
-		const currentUrl = location.host + location.pathname;
+		const site = location.host;
+		const slug = location.pathname;
+		// const currentUrl = location.host + location.pathname;
 
 		// prep data
 		const baseUrl = parent.getBaseUrl();
@@ -331,7 +333,9 @@ class KomentarApp extends HTMLElement {
 			body: JSON.stringify({
 				author: author,
 				content: content,
-				url: currentUrl,
+				// url: currentUrl,
+				site: site,
+				slug: slug
 			}),
 		};
 
@@ -361,7 +365,9 @@ class KomentarApp extends HTMLElement {
 		const content = document.querySelector(KOMENTAR_TAG).shadowRoot.getElementById(`reply-input-${id}`).value;
 
 		// get url
-		const currentUrl = location.host + location.pathname;
+		const site = location.host;
+		const slug = location.pathname;
+		// const currentUrl = location.host + location.pathname;
 
 		// prep data
 		const baseUrl = parent.getBaseUrl();
@@ -374,7 +380,9 @@ class KomentarApp extends HTMLElement {
 			body: JSON.stringify({
 				author: author,
 				content: content,
-				url: currentUrl,
+				// url: currentUrl,
+				site: site,
+				slug: slug
 			}),
 		};
 
@@ -397,8 +405,10 @@ class KomentarApp extends HTMLElement {
 
 	fetchKomentar() {
 		const baseUrl = this.getBaseUrl();
-		const currentUrl = location.host + location.pathname;
-		const requestUrl = `${baseUrl}/comments?url=${currentUrl}&host=${location.host}&slug=${location.pathname}`;
+		const site = location.host;
+		const slug = location.pathname;
+		// const currentUrl = location.host + location.pathname;
+		const requestUrl = `${baseUrl}/comments?site=${site}&slug=${slug}`;
 		const requestOptions = {
 			method: "GET",
 			headers: {

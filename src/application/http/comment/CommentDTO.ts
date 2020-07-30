@@ -1,7 +1,8 @@
 export interface CreateCommentDTO {
 	author: string;
 	content: string;
-	url: string;
+	site: string;
+	slug: string;
 }
 
 export interface ModifyCommentDTO {

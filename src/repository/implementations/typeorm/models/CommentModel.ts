@@ -38,9 +38,16 @@ export class CommentModel {
     @Column({
         type: 'varchar',
         length: 255,
-        comment: 'used for storing post url.'
+        comment: 'used for storing site location.'
     })
-    url: string;
+    site: string;
+
+    @Column({
+        type: 'varchar',
+        length: 255,
+        comment: "used for storing post's slug."
+    })
+    slug: string;
 
     @Column({
         type: "enum",

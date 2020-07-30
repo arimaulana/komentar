@@ -17,7 +17,8 @@ export class MySQLCommentRepository implements CommentRepository {
             .setParentId(comment.parent_id)
             .setAuthor(comment.author)
             .setContent(comment.content)
-            .setUrl(comment.url)
+            .setSite(comment.site)
+            .setSlug(comment.slug)
             .setStatus(comment.status)
             .setDate(comment.created_date)
             .build();
@@ -29,10 +30,11 @@ export class MySQLCommentRepository implements CommentRepository {
         return comments.map(comment => this.persistenceToDomain(comment));
     }
 
-    public async findByURL(url: string): Promise<Comment[]> {
+    public async findByURL(site: string, slug: string): Promise<Comment[]> {
         const comments = await this.commentRepository
             .createQueryBuilder("comment")
-            .where("comment.url = :url", { url: url })
+            .where("comment.site = :site", { site: site })
+            .andWhere("comment.slug = :slug", { slug: slug })
             .getMany();
 
         return comments.map(comment => this.persistenceToDomain(comment))
@@ -64,7 +66,8 @@ export class MySQLCommentRepository implements CommentRepository {
                     parent_id: comment.getParentId(),
                     author: comment.getAuthor(),
                     content: comment.getContent(),
-                    url: comment.getUrl(),
+                    site: comment.getSite(),
+                    slug: comment.getSlug(),
                     status: comment.getStatus(),
                     created_date: comment.getDate(),
                 }
@@ -84,7 +87,8 @@ export class MySQLCommentRepository implements CommentRepository {
                 parent_id: comment.getParentId(),
                 author: comment.getAuthor(),
                 content: comment.getContent(),
-                url: comment.getUrl(),
+                site: comment.getSite(),
+                slug: comment.getSlug(),
                 status: comment.getStatus(),
                 created_date: comment.getDate(),
             })

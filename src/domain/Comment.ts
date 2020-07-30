@@ -7,7 +7,8 @@ export class Comment {
 	private id: string;
 	private author: string;
 	private content: string;
-	private url: string; // url where the comment live
+	private site: string;
+	private slug: string;
 	private date: Date;
 	private status: CommentStatus;
 	private parentId: string;
@@ -16,7 +17,8 @@ export class Comment {
 		id: string,
 		author: string,
 		content: string,
-		url: string,
+		site: string,
+		slug: string,
 		date: Date,
 		status: CommentStatus,
 		parentId: string
@@ -24,7 +26,8 @@ export class Comment {
 		this.id = id;
 		this.author = author;
 		this.content = content;
-		this.url = url;
+		this.site = site;
+		this.slug = slug;
 		this.date = date;
 		this.status = status;
 		this.parentId = parentId;
@@ -61,8 +64,12 @@ export class Comment {
 		return this.content;
 	}
 
-	public getUrl(): string {
-		return this.url;
+	public getSite(): string {
+		return this.site;
+	}
+
+	public getSlug(): string {
+		return this.slug;
 	}
 
 	public getDate(): Date {
@@ -82,7 +89,8 @@ export class CommentBuilder {
 	private commentId: string;
 	private commentAuthor: string;
 	private commentContent: string;
-	private commentUrl: string;
+	private commentSite: string;
+	private commentSlug: string;
 	private commentDate: Date = new Date();
 	private commentStatus: CommentStatus = CommentStatus.SHOWED;
 	private commentParentId: string;
@@ -102,8 +110,13 @@ export class CommentBuilder {
 		return this;
 	}
 
-	public setUrl(url: string): CommentBuilder {
-		this.commentUrl = url;
+	public setSite(site: string): CommentBuilder {
+		this.commentSite = site;
+		return this;
+	}
+
+	public setSlug(slug: string): CommentBuilder {
+		this.commentSlug = slug;
 		return this;
 	}
 
@@ -129,7 +142,8 @@ export class CommentBuilder {
 			this.commentId,
 			this.commentAuthor,
 			this.commentContent,
-			this.commentUrl,
+			this.commentSite,
+			this.commentSlug,
 			this.commentDate,
 			this.commentStatus,
 			this.commentParentId

@@ -8,7 +8,7 @@ import { Comment } from "../domain/Comment";
 export interface CommentRepository {
 	findAll(): Promise<Comment[]>;
 
-	findByURL(url: string): Promise<Comment[]>;
+	findByURL(site: string, slug: string): Promise<Comment[]>;
 
 	findById(id: string): Promise<Comment>;
 

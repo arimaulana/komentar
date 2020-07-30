@@ -15,8 +15,8 @@ export class InMemoryCommentRepository implements CommentRepository {
 		return this.comments;
 	}
 
-	public async findByURL(url: string): Promise<Comment[]> {
-		return this.comments.filter((comment) => comment.getUrl() === url);
+	public async findByURL(site: string, slug: string): Promise<Comment[]> {
+		return this.comments.filter((comment) => comment.getSite() === site && comment.getSlug() === slug);
 	}
 
 	public async findById(id: string): Promise<Comment> {

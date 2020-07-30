@@ -27,13 +27,15 @@ export class CommentController extends BaseController {
 	}
 
 	@Get()
-	public async findAllCommentsByURL(@Query("url") url: string) {
+	public async findAllCommentsByURL(@Query("site") site: string, @Query("slug") slug: string) {
 		try {
-			if (!url) {
-				return this.badRequest("Url required.");
+			if (!site) {
+				return this.badRequest("Site required.");
+			} else if (!slug) {
+				return this.badRequest("Slug required.");
 			}
 
-			const comments = await this.commentService.findCommentsByURL(url);
+			const comments = await this.commentService.findCommentsByURL(site, slug);
 			return this.ok(comments);
 		} catch (e) {
 			return this.fail(e);
@@ -68,17 +70,19 @@ export class CommentController extends BaseController {
 	@Post()
 	public async createComment(@Body() createCommentDTO: CreateCommentDTO) {
 		try {
-			const { author, content, url } = createCommentDTO;
+			const { author, content, site, slug } = createCommentDTO;
 
 			if (!author) {
 				return this.badRequest("Author required.");
 			} else if (!content) {
 				return this.badRequest("Content required.");
-			} else if (!url) {
-				return this.badRequest("Url required.");
+			} else if (!site) {
+				return this.badRequest("Site required.");
+			} else if (!slug) {
+				return this.badRequest("Slug required.");
 			}
 
-			const createdCommentId = await this.commentService.createComment(author, content, url);
+			const createdCommentId = await this.commentService.createComment(author, content, site, slug);
 			return this.created(createdCommentId);
 		} catch (e) {
 			return this.fail(e);
@@ -88,16 +92,18 @@ export class CommentController extends BaseController {
 	@Post(":id/replies")
 	public async createReplyComment(@Param("id") commentId: string, @Body() createCommentDTO: CreateCommentDTO) {
 		try {
-			const { author, content, url } = createCommentDTO;
+			const { author, content, site, slug } = createCommentDTO;
 			if (!author) {
 				return this.badRequest("Author required.");
 			} else if (!content) {
 				return this.badRequest("Content required.");
-			} else if (!url) {
-				return this.badRequest("Url required.");
+			} else if (!site) {
+				return this.badRequest("Site required.");
+			} else if (!slug) {
+				return this.badRequest("Slug required.");
 			}
 
-			const createdReplyCommentId = await this.commentService.createComment(author, content, url, commentId);
+			const createdReplyCommentId = await this.commentService.createComment(author, content, site, slug, commentId);
 			return this.created(createdReplyCommentId);
 		} catch (e) {
 			return this.fail(e);

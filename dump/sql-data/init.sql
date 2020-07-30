@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: komentar-db:3306
--- Generation Time: Jul 28, 2020 at 12:40 PM
+-- Generation Time: Jul 30, 2020 at 02:54 PM
 -- Server version: 5.7.29
 -- PHP Version: 7.4.6
 
@@ -29,7 +29,8 @@ CREATE TABLE IF NOT EXISTS `comment` (
   `parent_id` varchar(50) NOT NULL DEFAULT '0' COMMENT 'Parent Comment ID',
   `author` varchar(50) NOT NULL COMMENT 'Authors',
   `content` longtext NOT NULL COMMENT 'Comment Content',
-  `url` varchar(255) NOT NULL COMMENT 'Post location',
+  `site` varchar(255) NOT NULL COMMENT 'used for storing site location.',
+  `slug` varchar(255) NOT NULL COMMENT 'used for storing post''s slug.',
   `status` enum('showed','hidden') NOT NULL DEFAULT 'showed' COMMENT 'Comment status',
   `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation time',
   PRIMARY KEY (`id`)
@@ -44,8 +45,8 @@ TRUNCATE TABLE `comment`;
 -- Dumping data for table `comment`
 --
 
-INSERT INTO `comment` (`id`, `parent_id`, `author`, `content`, `url`, `status`, `created_date`) VALUES
-('f672852a-8284-4920-8297-8c0c0aa6ef55-1595859848226', '0', 'Ari Maulana', 'Test Comment 3', 'arimaulana.com/first-post', 'showed', '2020-07-27 14:23:25');
+INSERT INTO `comment` (`id`, `parent_id`, `author`, `content`, `site`, `slug`, `status`, `created_date`) VALUES
+('33e4885d-e015-4387-9b53-992c3e26dd8a-1596120716703', '0', 'Ari Maulana', 'Test Comment 3ds', 'arimaulana.com', '/first-post', 'showed', '2020-07-30 21:51:57');
 
 -- --------------------------------------------------------
 

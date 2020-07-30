@@ -6,13 +6,13 @@ import { Comment } from "../domain/Comment";
  * This will be the port (contract) in term of hexagonal architecture
  */
 export interface CommentService {
-	findCommentsByURL(url: string): Promise<Comment[]>;
+	findCommentsByURL(site: string, slug: string): Promise<Comment[]>;
 
 	findAllComments(): Promise<Comment[]>;
 
 	findCommentByID(id: string): Promise<Comment>;
 
-	createComment(author: string, content: string, url: string, parentId?: string): Promise<string>;
+	createComment(author: string, content: string, site: string, slug: string, parentId?: string): Promise<string>;
 
 	modifyComment(id: string, content: string): Promise<void>;
 

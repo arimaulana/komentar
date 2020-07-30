@@ -13,8 +13,8 @@ export class CommentServiceImpl implements CommentService {
 		this.commentRepository = commentRepository;
 	}
 
-	public async findCommentsByURL(url: string): Promise<Comment[]> {
-		return await this.commentRepository.findByURL(url);
+	public async findCommentsByURL(site: string, slug: string): Promise<Comment[]> {
+		return await this.commentRepository.findByURL(site, slug);
 	}
 
 	public async findAllComments(): Promise<Comment[]> {
@@ -25,7 +25,7 @@ export class CommentServiceImpl implements CommentService {
 		return await this.commentRepository.findById(id);
 	}
 
-	public async createComment(author: string, content: string, url: string, parentId?: string): Promise<string> {
+	public async createComment(author: string, content: string, site: string, slug: string, parentId?: string): Promise<string> {
 		const id = `${uuidv4()}-${new Date().getTime()}`;
 
 		// validate parent id
@@ -38,7 +38,8 @@ export class CommentServiceImpl implements CommentService {
 			.setId(id)
 			.setAuthor(author)
 			.setContent(content)
-			.setUrl(url)
+			.setSite(site)
+			.setSlug(slug)
 			.setParentId(parentId)
 			.build();
 
